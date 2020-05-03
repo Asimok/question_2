@@ -7,11 +7,14 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cluster import DBSCAN
 
-pos_com = pd.read_excel('/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls')
-all_data = pd.read_excel('/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls')
+from question2.数据清洗.date_format import get_date_interval
+path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
+# path='/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
+pos_com = pd.read_excel(path)
+all_data = pd.read_excel(path)
 predict_data = []
 
-for index in pos_com['留言详情']:
+for index in pos_com['留言主题']:
     predict_data.append(
         str(index).strip().replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000',
                                                                                                           '').replace(
@@ -43,8 +46,8 @@ for temp_theme in predict_data:
                 word2flagdict[i.word] = i.flag
     keywords = " ".join(data_after_stop)
     PEOPLE_AND_LOC.append(keywords)
-all_data['主题分词'] = PEOPLE_AND_LOC
-all_data.to_excel('/home/asimov/PycharmProjects/question_2/question2/聚类分析/附件3_labels.xlsx', index=None)
+# all_data['主题分词'] = PEOPLE_AND_LOC
+# all_data.to_excel('/home/asimov/PycharmProjects/question_2/question2/聚类分析/附件3_labels.xlsx', index=None)
 
 # 自己造一个{“词语”:“词性”}的字典，方便后续使用词性
 # word2flagdict = {wordtocixing[i]:cixingofword[i] for i in range(len(wordtocixing))}
@@ -75,6 +78,18 @@ for i in range(len(weight)):
     for j in range(len(word)):
         newweight[i][j] = weight[i][j] * wordflagweight[j]
 
+hot_score = []  # 热度指数
+write_cluster_detail = []
+write_cluster_theme = []
+write_cluster_id = []
+write_cluster_user = []
+write_cluster_detail_id = []
+write_cluster_time = []
+temp_detail = list(pos_com['留言详情'])
+temp_theme = list(pos_com['留言主题'])
+temp_user = list(pos_com['留言用户'])
+temp_id = list(pos_com['留言编号'])
+temp_time = list(pos_com['留言时间'])
 # DBSCAN聚类分析
 
 DBS_clf = DBSCAN(eps=1.3, min_samples=4)
@@ -97,22 +112,41 @@ def labels_to_original(labels, original_corpus):
     return result, result_loc
 
 
+def get_interval(temp_loc_list):
+    # 去除1年之外的数据
+    # min_date = '2099/12/31 00:00:00'
+    # max_date = '2000/12/01 00:00:00'
+    min_date = temp_time[0]
+    max_date = temp_time[0]
+    # 找到最大日期
+    for loc in temp_loc_list:
+        temp_max = get_date_interval(max_date, temp_time[loc])
+
+        if temp_max > 0 & temp_max < 360:
+            max_date = temp_time[loc]
+    for loc in temp_loc_list:
+        temp_min = get_date_interval(temp_time[loc], min_date)
+        if temp_min > 0 and (get_date_interval(temp_time[loc],max_date) < 360):
+            print(temp_min,get_date_interval(temp_time[loc],max_date))
+            min_date = temp_time[loc]
+    print('最小日期   ', min_date)
+    print('最大日期   ',max_date)
+    return get_date_interval(min_date, max_date)
+
+
 labels_original, labels_loc = labels_to_original(labels_, PEOPLE_AND_LOC)
 # for i in range(5):
 #     print(labels_original[i])
+# get_interval(labels_loc[13])
 
-write_cluster_detail = []
-write_cluster_theme = []
-write_cluster_id = []
-write_cluster_user = []
-write_cluster_detail_id = []
-write_cluster_time = []
-temp_detail = list(pos_com['留言详情'])
-temp_theme = list(pos_com['留言主题'])
-temp_user = list(pos_com['留言用户'])
-temp_id = list(pos_com['留言编号'])
-temp_time = list(pos_com['留言时间'])
 for i in range(len(labels_loc) - 1):
+    # 时间跨度
+    temp_interval = get_interval(labels_loc[i])
+    # 留言数量
+    message_num = len(labels_loc[i])
+    # 单位热度
+    temp_hot = message_num / temp_interval
+    hot_score.append(temp_hot)
     for j in labels_loc[i]:
         write_cluster_detail.append(temp_detail[j])
         write_cluster_theme.append(temp_theme[j])
@@ -120,6 +154,7 @@ for i in range(len(labels_loc) - 1):
         write_cluster_id.append(temp_id[j])
         write_cluster_user.append(temp_user[j])
         write_cluster_time.append(temp_time[j])
+        hot_score.append("  ")
     write_cluster_detail.append("   ")
     write_cluster_theme.append("   ")
     write_cluster_detail_id.append("   ")
@@ -127,9 +162,9 @@ for i in range(len(labels_loc) - 1):
     write_cluster_user.append("   ")
     write_cluster_time.append("   ")
 write_cluster_detail_xls = pd.DataFrame(
-    {"聚类ID": write_cluster_detail_id, '留言主题': write_cluster_theme, '留言详情': write_cluster_detail,
+    {"热度指数": hot_score, "聚类ID": write_cluster_detail_id, '留言主题': write_cluster_theme, '留言详情': write_cluster_detail,
      '留言编号': write_cluster_id, '留言用户': write_cluster_user, '留言时间': write_cluster_time},
-    columns=['聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
-outpath = './聚类_主题_去重_0.9_4.xls'
+    columns=["热度指数", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
+outpath = './示例数据_聚类_主题_去重_热度_0.9_4.xls'
 write_cluster_detail_xls.to_excel(outpath, index=None)
 print(outpath, '导出成功!!!')

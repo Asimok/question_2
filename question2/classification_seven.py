@@ -6,7 +6,8 @@ import jieba.posseg as psg
 import pandas as pd
 
 classification = ['城乡建设', '环境保护', '交通运输', '教育文体', '劳动和社会保障', '商贸旅游', '卫生计生']
-data = pd.read_excel('/home/asimov/PycharmProjects/question_2/question2/data/附件3_labels.xlsx', sheet_name='Sheet1')
+path = '/home/asimov/文档/2020数据挖掘/C题/示例数据/附件3.xlsx'
+data = pd.read_excel(path)
 
 cxjs_data = data.loc[data['预测一级标签'] == classification[0]]
 hjbh_data = data.loc[data['预测一级标签'] == classification[1]]
@@ -49,7 +50,7 @@ def generate_people_and_loc(temp_set):
     temp_save = pd.DataFrame(
         {'留言编号': temp_id, '留言用户': temp_user, '留言时间': temp_time, '地点/人群': PEOPLE_AND_LOC, '反对数': temp_disagree,
          '点赞数': temp_agree}, columns=col)
-    temp_save.to_excel('./classifications_seven_PEOPLE_AND_LOC/' + temp_label + '——地点_人群_主题.xls',index=None)
+    temp_save.to_excel('./classifications_seven_PEOPLE_AND_LOC/' + temp_label + '——地点_人群_主题.xls', index=None)
 
 
 generate_people_and_loc(cxjs_data)
@@ -59,4 +60,3 @@ generate_people_and_loc(jywt_data)
 generate_people_and_loc(ldhshbz_data)
 generate_people_and_loc(smly_data)
 generate_people_and_loc(wsjs_data)
-
