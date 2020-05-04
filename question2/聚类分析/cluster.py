@@ -8,8 +8,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cluster import DBSCAN
 
 from question2.数据清洗.date_format import get_date_interval
-path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
-# path='/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
+
+# path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
+path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
 pos_com = pd.read_excel(path)
 all_data = pd.read_excel(path)
 predict_data = []
@@ -79,20 +80,33 @@ for i in range(len(weight)):
         newweight[i][j] = weight[i][j] * wordflagweight[j]
 
 hot_score = []  # 热度指数
+hot_score_tb2 = []
+time_span = []
 write_cluster_detail = []
 write_cluster_theme = []
 write_cluster_id = []
 write_cluster_user = []
 write_cluster_detail_id = []
 write_cluster_time = []
+write_cluster_detail_tb2 = []
+write_cluster_theme_tb2 = []
+write_cluster_id_tb2 = []
+write_cluster_user_tb2 = []
+write_cluster_detail_id_tb2 = []
+write_cluster_time_tb2 = []
+write_cluster_like_tb2 = []
+write_cluster_dislike_tb2 = []
 temp_detail = list(pos_com['留言详情'])
 temp_theme = list(pos_com['留言主题'])
 temp_user = list(pos_com['留言用户'])
 temp_id = list(pos_com['留言编号'])
 temp_time = list(pos_com['留言时间'])
+temp_like = list(pos_com['点赞数'])
+temp_dislike = list(pos_com['反对数'])
+like_and_dislike = 0
 # DBSCAN聚类分析
 
-DBS_clf = DBSCAN(eps=1.3, min_samples=4)
+DBS_clf = DBSCAN(eps=0.9, min_samples=4)
 DBS_clf.fit(newweight)
 labels_ = DBS_clf.labels_
 
@@ -126,45 +140,153 @@ def get_interval(temp_loc_list):
             max_date = temp_time[loc]
     for loc in temp_loc_list:
         temp_min = get_date_interval(temp_time[loc], min_date)
-        if temp_min > 0 and (get_date_interval(temp_time[loc],max_date) < 360):
-            print(temp_min,get_date_interval(temp_time[loc],max_date))
+        if temp_min > 0 and (get_date_interval(temp_time[loc], max_date) < 360):
+            print(temp_min, get_date_interval(temp_time[loc], max_date))
             min_date = temp_time[loc]
     print('最小日期   ', min_date)
-    print('最大日期   ',max_date)
+    print('最大日期   ', max_date)
     return get_date_interval(min_date, max_date)
+
+
+def get_interval_min_max(temp_loc_list):
+    min_date = temp_time[0]
+    max_date = temp_time[0]
+    # 找到最大日期
+    for loc in temp_loc_list:
+        temp_max = get_date_interval(max_date, temp_time[loc])
+        temp_min = get_date_interval(temp_time[loc], min_date)
+        if temp_max > 0:
+            max_date = temp_time[loc]
+        if temp_min > 0:
+            print(temp_min, get_date_interval(temp_time[loc], max_date))
+            min_date = temp_time[loc]
+    # print('最小日期   ', min_date)
+    # print('最大日期   ', max_date)
+    max_date = str(max_date).replace('-', '/')
+    min_date = str(min_date).replace('-', '/')
+    return str(str(min_date).split(' ')[0] + ' 至 ' + str(max_date).split(' ')[0])
+
+
+def get_single_like_and_dislike(temp_loc_list):
+    single_like_and_dislike = 0
+    for loc in temp_loc_list:
+        single_like_and_dislike += temp_like[loc]
+        single_like_and_dislike += temp_dislike[loc]
+
+    return single_like_and_dislike
 
 
 labels_original, labels_loc = labels_to_original(labels_, PEOPLE_AND_LOC)
 # for i in range(5):
 #     print(labels_original[i])
 # get_interval(labels_loc[13])
+# 计算总点赞数+反对数
+for i in range(len(labels_loc) - 1):
+    for j in labels_loc[i]:
+        like_and_dislike += temp_like[j]
+        like_and_dislike += temp_dislike[j]
 
+get_interval_min_max(labels_loc[0])
 for i in range(len(labels_loc) - 1):
     # 时间跨度
     temp_interval = get_interval(labels_loc[i])
     # 留言数量
     message_num = len(labels_loc[i])
     # 单位热度
-    temp_hot = message_num / temp_interval
-    hot_score.append(temp_hot)
+    temp_hot_time = message_num / temp_interval
+    # 社交热度
+    single_like_and_dislike = get_single_like_and_dislike(labels_loc[i])
+    temp_hot_like_and_dislike = single_like_and_dislike / like_and_dislike
+    # 热度指数
+    temp_hot = temp_hot_time * 0.7 + temp_hot_like_and_dislike + 0.3
+    # hot_score.append(temp_hot)
+
+    # time_span.append(get_interval_min_max(labels_loc[i]))
+    time_span_inner = get_interval_min_max(labels_loc[i])
     for j in labels_loc[i]:
         write_cluster_detail.append(temp_detail[j])
+        write_cluster_detail_tb2.append(temp_detail[j])
         write_cluster_theme.append(temp_theme[j])
+        write_cluster_theme_tb2.append(temp_theme[j])
         write_cluster_detail_id.append(i)
+        write_cluster_detail_id_tb2.append(i)
         write_cluster_id.append(temp_id[j])
+        write_cluster_id_tb2.append(temp_id[j])
         write_cluster_user.append(temp_user[j])
         write_cluster_time.append(temp_time[j])
-        hot_score.append("  ")
-    write_cluster_detail.append("   ")
-    write_cluster_theme.append("   ")
-    write_cluster_detail_id.append("   ")
-    write_cluster_id.append("   ")
-    write_cluster_user.append("   ")
-    write_cluster_time.append("   ")
+        write_cluster_user_tb2.append(temp_user[j])
+        write_cluster_time_tb2.append(temp_time[j])
+        write_cluster_like_tb2.append(temp_like[j])
+        write_cluster_dislike_tb2.append(temp_dislike[j])
+        hot_score_tb2.append(temp_hot)
+        hot_score.append(temp_hot)
+        time_span.append(time_span_inner)
+        # hot_score.append("  ")
+        # time_span.append("  ")
+    # write_cluster_detail.append("   ")
+    # write_cluster_theme.append("   ")
+    # write_cluster_detail_id.append("   ")
+    # write_cluster_id.append("   ")
+    # write_cluster_user.append("   ")
+    # write_cluster_time.append("   ")
+
+# ----------------------------聚类结果明细表 -------------------------------------#
 write_cluster_detail_xls = pd.DataFrame(
     {"热度指数": hot_score, "聚类ID": write_cluster_detail_id, '留言主题': write_cluster_theme, '留言详情': write_cluster_detail,
-     '留言编号': write_cluster_id, '留言用户': write_cluster_user, '留言时间': write_cluster_time},
-    columns=["热度指数", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
-outpath = './示例数据_聚类_主题_去重_热度_0.9_4.xls'
-write_cluster_detail_xls.to_excel(outpath, index=None)
+     '留言编号': write_cluster_id, '留言用户': write_cluster_user, '留言时间': write_cluster_time, "时间范围": time_span},
+    columns=["热度指数", "时间范围", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
+write_cluster_detail_xls.sort_values("热度指数", inplace=True, ascending=False)
+orders = list(set(list(hot_score)))
+orders.sort(reverse=True)
+new_write_cluster_detail_id_tb2 = []
+for i in write_cluster_detail_xls['热度指数']:
+    new_write_cluster_detail_id_tb2.append(orders.index(i) + 1)
+new_write_cluster_id=[]
+new_write_cluster_time=[]
+new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[0])
+for i in range(1,len(write_cluster_detail_xls["聚类ID"])):
+    if list(write_cluster_detail_xls["聚类ID"])[i]==list(write_cluster_detail_xls["聚类ID"])[i-1]:
+        new_write_cluster_id.append(" ")
+    else:
+        new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[i])
+new_write_cluster_time.append(list(write_cluster_detail_xls["时间范围"])[0])
+for i in range(1,len(write_cluster_detail_xls["时间范围"])):
+    if list(write_cluster_detail_xls["时间范围"])[i]==list(write_cluster_detail_xls["时间范围"])[i-1]:
+        new_write_cluster_time.append(" ")
+    else:
+        new_write_cluster_time.append(list(write_cluster_detail_xls["时间范围"])[i])
+write_cluster_detail_xls_2 = pd.DataFrame(
+    {"热度指数": write_cluster_detail_xls["热度指数"], "问题ID": new_write_cluster_detail_id_tb2,
+     "聚类ID": new_write_cluster_id,
+     '留言主题': write_cluster_detail_xls["留言主题"], '留言详情': write_cluster_detail_xls["留言详情"],
+     '留言编号': write_cluster_detail_xls["留言编号"], '留言用户': write_cluster_detail_xls["留言用户"],
+     '留言时间': write_cluster_detail_xls["留言时间"],
+     "时间范围": new_write_cluster_time},
+    columns=["热度指数", "时间范围", "问题ID", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
+
+outpath = './聚类结果明细表.xls'
+write_cluster_detail_xls_2.to_excel(outpath, index=None)
+print(outpath, '导出成功!!!')
+
+# ----------------------------表2-导出热点问题留言明细表 -------------------------------------#
+
+
+write_table2 = pd.DataFrame(
+    {"问题ID": write_cluster_detail_id_tb2, '留言主题': write_cluster_theme_tb2, '留言详情': write_cluster_detail_tb2,
+     '留言编号': write_cluster_id_tb2, '留言用户': write_cluster_user_tb2, '留言时间': write_cluster_time_tb2,
+     "点赞数": write_cluster_like_tb2, '反对数': write_cluster_dislike_tb2, '热度指数': hot_score_tb2},
+    columns=['热度指数', '问题ID', '留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '点赞数', '反对数'])
+write_table2.sort_values("热度指数", inplace=True, ascending=False)
+orders = list(set(list(hot_score_tb2)))
+orders.sort(reverse=True)
+new_write_cluster_detail_id_tb2 = []
+for i in write_table2['热度指数']:
+    new_write_cluster_detail_id_tb2.append(orders.index(i) + 1)
+write_table2 = pd.DataFrame(
+    {"问题ID": new_write_cluster_detail_id_tb2, '留言主题': write_table2['留言主题'], '留言详情': write_table2['留言详情'],
+     '留言编号': write_table2['留言编号'], '留言用户': write_table2['留言用户'], '留言时间': write_table2['留言时间'],
+     "点赞数": write_table2['点赞数'], '反对数': write_table2['反对数']},
+    columns=['问题ID', '留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '点赞数', '反对数'])
+outpath = './表2-热点问题留言明细表.xls'
+write_table2.to_excel(outpath, index=None)
 print(outpath, '导出成功!!!')

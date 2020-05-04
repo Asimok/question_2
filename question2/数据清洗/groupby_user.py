@@ -5,8 +5,8 @@ from question2.数据清洗.date_format import get_date_interval
 from question2.数据清洗.sentence_similarity import tf_similarity
 
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '反对数', '点赞数']
-path = '/home/asimov/文档/2020数据挖掘/C题/示例数据/附件3.xlsx'
-# path='/home/asimov/PycharmProjects/question_2/question2/数据清洗/附件3.xlsx'
+# path = '/home/asimov/文档/2020数据挖掘/C题/示例数据/附件3.xlsx'
+path='/home/asimov/PycharmProjects/question_2/question2/数据清洗/附件3.xlsx'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
