@@ -26,7 +26,9 @@ for index in pos_com['留言主题']:
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
 jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('../data/changsha_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_area_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
@@ -36,7 +38,7 @@ stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '
 data_after_stop = data_cut.apply(lambda x: [i.strip() for i in x if i not in stop_words])
 
 word2flagdict = {}
-PEOPLE_AND_LOC = []
+data_after_jieba = []
 for temp_theme in predict_data:
     data_cut = psg.cut(temp_theme)
     data_after_stop = []
@@ -46,8 +48,8 @@ for temp_theme in predict_data:
                 data_after_stop.append(i.word)
                 word2flagdict[i.word] = i.flag
     keywords = " ".join(data_after_stop)
-    PEOPLE_AND_LOC.append(keywords)
-# all_data['主题分词'] = PEOPLE_AND_LOC
+    data_after_jieba.append(keywords)
+# all_data['主题分词'] = data_after_jieba
 # all_data.to_excel('/home/asimov/PycharmProjects/question_2/question2/聚类分析/附件3_labels.xlsx', index=None)
 
 # 自己造一个{“词语”:“词性”}的字典，方便后续使用词性
@@ -56,7 +58,7 @@ for temp_theme in predict_data:
 vectorizer = CountVectorizer()
 transformer = TfidfTransformer()  # 该类会统计每个词语的tf-idf权值
 # 第一个fit_transform是计算tf-idf 第二个fit_transform是将文本转为词频矩阵
-tfidf = transformer.fit_transform(vectorizer.fit_transform(PEOPLE_AND_LOC))
+tfidf = transformer.fit_transform(vectorizer.fit_transform(data_after_jieba))
 # 获取词袋模型中的所有词语
 word = vectorizer.get_feature_names()
 # 将tf-idf矩阵抽取出来，元素w[i][j]表示j词在i类文本中的tf-idf权重
@@ -176,7 +178,7 @@ def get_single_like_and_dislike(temp_loc_list):
     return single_like_and_dislike
 
 
-labels_original, labels_loc = labels_to_original(labels_, PEOPLE_AND_LOC)
+labels_original, labels_loc = labels_to_original(labels_, data_after_jieba)
 # for i in range(5):
 #     print(labels_original[i])
 # get_interval(labels_loc[13])
@@ -200,7 +202,6 @@ for i in range(len(labels_loc) - 1):
     # 热度指数
     temp_hot = temp_hot_time * 0.7 + temp_hot_like_and_dislike + 0.3
     # hot_score.append(temp_hot)
-
     # time_span.append(get_interval_min_max(labels_loc[i]))
     time_span_inner = get_interval_min_max(labels_loc[i])
     for j in labels_loc[i]:
@@ -241,22 +242,29 @@ orders.sort(reverse=True)
 new_write_cluster_detail_id_tb2 = []
 for i in write_cluster_detail_xls['热度指数']:
     new_write_cluster_detail_id_tb2.append(orders.index(i) + 1)
-new_write_cluster_id=[]
-new_write_cluster_time=[]
+new_write_cluster_id = []
+new_write_cluster_time = []
+new_write_cluster_hot = []
 new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[0])
-for i in range(1,len(write_cluster_detail_xls["聚类ID"])):
-    if list(write_cluster_detail_xls["聚类ID"])[i]==list(write_cluster_detail_xls["聚类ID"])[i-1]:
+for i in range(1, len(write_cluster_detail_xls["聚类ID"])):
+    if list(write_cluster_detail_xls["聚类ID"])[i] == list(write_cluster_detail_xls["聚类ID"])[i - 1]:
         new_write_cluster_id.append(" ")
     else:
         new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[i])
 new_write_cluster_time.append(list(write_cluster_detail_xls["时间范围"])[0])
-for i in range(1,len(write_cluster_detail_xls["时间范围"])):
-    if list(write_cluster_detail_xls["时间范围"])[i]==list(write_cluster_detail_xls["时间范围"])[i-1]:
+for i in range(1, len(write_cluster_detail_xls["时间范围"])):
+    if list(write_cluster_detail_xls["时间范围"])[i] == list(write_cluster_detail_xls["时间范围"])[i - 1]:
         new_write_cluster_time.append(" ")
     else:
         new_write_cluster_time.append(list(write_cluster_detail_xls["时间范围"])[i])
+new_write_cluster_hot.append(list(write_cluster_detail_xls["热度指数"])[0])
+for i in range(1, len(write_cluster_detail_xls["热度指数"])):
+    if list(write_cluster_detail_xls["热度指数"])[i] == list(write_cluster_detail_xls["热度指数"])[i - 1]:
+        new_write_cluster_hot.append(" ")
+    else:
+        new_write_cluster_hot.append(list(write_cluster_detail_xls["热度指数"])[i])
 write_cluster_detail_xls_2 = pd.DataFrame(
-    {"热度指数": write_cluster_detail_xls["热度指数"], "问题ID": new_write_cluster_detail_id_tb2,
+    {"热度指数": new_write_cluster_hot, "问题ID": new_write_cluster_detail_id_tb2,
      "聚类ID": new_write_cluster_id,
      '留言主题': write_cluster_detail_xls["留言主题"], '留言详情': write_cluster_detail_xls["留言详情"],
      '留言编号': write_cluster_detail_xls["留言编号"], '留言用户': write_cluster_detail_xls["留言用户"],
@@ -282,11 +290,11 @@ orders.sort(reverse=True)
 new_write_cluster_detail_id_tb2 = []
 for i in write_table2['热度指数']:
     new_write_cluster_detail_id_tb2.append(orders.index(i) + 1)
-write_table2 = pd.DataFrame(
+write_table2_2 = pd.DataFrame(
     {"问题ID": new_write_cluster_detail_id_tb2, '留言主题': write_table2['留言主题'], '留言详情': write_table2['留言详情'],
      '留言编号': write_table2['留言编号'], '留言用户': write_table2['留言用户'], '留言时间': write_table2['留言时间'],
      "点赞数": write_table2['点赞数'], '反对数': write_table2['反对数']},
     columns=['问题ID', '留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '点赞数', '反对数'])
 outpath = './表2-热点问题留言明细表.xls'
-write_table2.to_excel(outpath, index=None)
+write_table2_2.to_excel(outpath, index=None)
 print(outpath, '导出成功!!!')

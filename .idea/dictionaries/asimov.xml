@@ -1,7 +1,14 @@
 <component name="ProjectDictionaryState">
   <dictionary name="asimov">
     <words>
+      <w>confrim</w>
+      <w>flagdict</w>
+      <w>jieba</w>
       <w>outpath</w>
+      <w>textrank</w>
+      <w>tfidf</w>
+      <w>vectorizer</w>
+      <w>wordflagweight</w>
       <w>xlsx</w>
     </words>
   </dictionary>

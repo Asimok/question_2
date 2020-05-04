@@ -10,7 +10,9 @@ path='/home/asimov/PycharmProjects/question_2/question2/数据清洗/附件3.xls
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
-
+# 同一时间格式
+# for date in data['留言时间']:
+data['留言时间']=data['留言时间'].apply(lambda x:str(x).strip().replace('-','/'))
 
 # 去重复
 def remove_user_themes(temp_list_fun, interval_day, similarity):
@@ -60,5 +62,5 @@ for temp_list in user_list:
         # user_list_end.append(temp_list)
         user_df_end = pd.concat([user_df_end, temp_list], axis=0)
 
-user_df_end.to_excel('/home/asimov/PycharmProjects/question_2/question2/数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls',
+user_df_end.to_excel('/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls',
                      index=None)

@@ -1,10 +1,17 @@
 import jieba.analyse
 import pandas as pd
 
-path = '/home/asimov/PycharmProjects/question_2/question2/聚类分析/示例数据_聚类_主题_去重_热度_0.9_4.xls'
+path = '/home/asimov/PycharmProjects/question_2/question2/聚类分析/聚类结果明细表.xls'
 data = pd.read_excel(path)
 jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('../data/changsha_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_area_ns.txt')
+
+info = ''
+for i in range(len(data['留言详情'])):
+    if list(data['问题ID'])[i] == 9:
+        info += str(data['留言主题'][i]).strip()
 
 
 def generate_people_and_loc(temp_set):
@@ -27,4 +34,10 @@ def generate_people_and_loc(temp_set):
     temp_save.to_excel('./示例数据——地点_人群.xls', index=None)
 
 
-generate_people_and_loc(data)
+# generate_people_and_loc(data)
+"""
+l:习用语 nr:人名 nz:其他专名 ns:地名
+"""
+a =jieba.analyse.extract_tags(sentence=info, topK=4, withWeight=False,
+                           allowPOS=(['ns']))
+print(a)
