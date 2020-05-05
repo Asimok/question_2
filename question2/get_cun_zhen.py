@@ -4,7 +4,7 @@ import jieba.analyse
 import pandas as pd
 
 classification = ['城乡建设', '环境保护', '交通运输', '教育文体', '劳动和社会保障', '商贸旅游', '卫生计生']
-data = pd.read_excel('/home/asimov/PycharmProjects/question_2/question2/data/附件3.xlsx', sheet_name='Sheet1')
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3.xlsx', sheet_name='Sheet1')
 
 theme_data = data['留言主题']
 detail_data = data['留言详情']

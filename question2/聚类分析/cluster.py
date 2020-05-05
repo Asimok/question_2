@@ -9,9 +9,9 @@ from sklearn.cluster import DBSCAN
 
 from question2.数据清洗.date_format import get_date_interval
 
-outpath2 = '/home/asimov/PycharmProjects/question_2/question2/answer/热点问题留言明细表.xls'
+outpath2 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/answer/热点问题留言明细表.xls'
 outpath = './聚类结果明细表.xls'
-path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
+path = '//question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
 pos_com = pd.read_excel(path)
 all_data = pd.read_excel(path)
 predict_data = []
@@ -27,9 +27,9 @@ for index in pos_com['留言主题']:
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
 jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
@@ -51,7 +51,7 @@ for temp_theme in predict_data:
     keywords = " ".join(data_after_stop)
     data_after_jieba.append(keywords)
 # all_data['主题分词'] = data_after_jieba
-# all_data.to_excel('/home/asimov/PycharmProjects/question_2/question2/聚类分析/附件3_labels.xlsx', index=None)
+# all_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/聚类分析/附件3_labels.xlsx', index=None)
 
 # 自己造一个{“词语”:“词性”}的字典，方便后续使用词性
 # word2flagdict = {wordtocixing[i]:cixingofword[i] for i in range(len(wordtocixing))}

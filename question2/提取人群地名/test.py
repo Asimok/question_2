@@ -2,14 +2,14 @@ import jieba
 from jieba import analyse
 
 jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
 
 
 def textrank_extract(text, keyword_num=10):
     textrank = analyse.textrank
-    # analyse.set_stop_words('/home/asimov/PycharmProjects/question_2/question2/data/stopword.txt',encoding='gb18030')
+    # analyse.set_stop_words('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt',encoding='gb18030')
     keywords = textrank(text, keyword_num)
     # 输出抽取出的关键词
     for keyword in keywords:
@@ -19,7 +19,7 @@ def textrank_extract(text, keyword_num=10):
 
 def tfidf_extract(text, keyword_num=10):
     tfidf = analyse.extract_tags
-    # analyse.set_stop_words('/home/asimov/PycharmProjects/question_2/question2/data/stopword.txt')
+    # analyse.set_stop_words('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt')
     keywords = tfidf(text, keyword_num)
     # 输出抽取出的关键词
     for keyword in keywords:

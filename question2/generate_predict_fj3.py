@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_excel('/home/asimov/PycharmProjects/question_2/question2/data/附件3.xlsx', sheet_name='Sheet1')
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3.xlsx', sheet_name='Sheet1')
 
 predict_data = []
 
@@ -13,7 +13,7 @@ for index in data['留言详情']:
             '\xa0', ''))
 
 path = '/home/asimov/PycharmProjects/Chinese-Text-Classification-Pytorch/THUCNews/data/'
-# path='/home/asimov/PycharmProjects/question_2/C_data/processed/'
+# path='/home/asimov/PycharmProjects/wisdom_gov_affairs/C_data/processed/'
 name = "data"
 with open(path + 'predict_' + name + '.txt', 'w') as f:
     for i in range(len(predict_data)):

@@ -93,7 +93,7 @@ with open('./changsha_traffic_ns.txt', 'w') as f:
 #
 # for i in range(len(xiaoqu)):
 #     dict_zhen[xiaoqu[i]] = i + len_zhen
-# data = pd.read_csv('/home/asimov/PycharmProjects/question_2/question2/data/places.txt', sep='hhh', engine='python',
+# data = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt', sep='hhh', engine='python',
 #                    header=None)
 # city = list(data[0])
 # for i in range(len(city)):

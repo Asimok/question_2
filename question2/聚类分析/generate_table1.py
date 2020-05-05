@@ -3,15 +3,15 @@ import jieba.analyse
 from textrank4zh import TextRank4Sentence, TextRank4Keyword
 import pandas as pd
 
-in_path = r'/home/asimov/PycharmProjects/question_2/question2/聚类分析/聚类结果明细表.xls'
+in_path = r'//question2/聚类分析/聚类结果明细表.xls'
 out_path = r'./问题描述.xls'
 out_path2 = r'./地点人群.xls'
 out_path3 = r'../answer/热点问题表.xls'
 df_in = pd.read_excel(in_path)
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/new_places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
 # -------------------------------------生成 问题描述------------------------------------
 max_id = df_in['问题ID'].max()
 df_hot_score = df_in['热度指数'].tolist()
