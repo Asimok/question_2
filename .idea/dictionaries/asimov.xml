@@ -2,6 +2,7 @@
   <dictionary name="asimov">
     <words>
       <w>confrim</w>
+      <w>convseg</w>
       <w>flagdict</w>
       <w>jieba</w>
       <w>outpath</w>

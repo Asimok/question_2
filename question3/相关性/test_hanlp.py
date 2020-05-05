@@ -1,9 +1,13 @@
+import hanlp
 import jieba.analyse
 import jieba.posseg as psg
-import pandas as pd
+tokenizer = hanlp.load('PKU_NAME_MERGED_SIX_MONTHS_CONVSEG')
 
-path = '/home/asimov/PycharmProjects/question_2/question2/聚类分析/聚类结果明细表.xls'
-data = pd.read_excel(path)
+recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
+
+A = recognizer.predict([list('关于A市地铁7号线的相关建议')])
+print(A)
+
 jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/data/new_places.txt')
 jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/图吧数据爬取/changsha_transportation_ns.txt')
 jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客数据爬取/changsha_houses_ns.txt')
@@ -12,6 +16,10 @@ jieba.load_userdict('/home/asimov/PycharmProjects/question_2/question2/安居客
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-a =jieba.analyse.extract_tags(sentence=info, topK=4, withWeight=False,
-                           allowPOS=(['ns']))
+a = jieba.analyse.extract_tags(sentence='咨询A市人才购房补贴通知问题', topK=4, withWeight=False,
+                               allowPOS=(['ns','nz','nr']))
 print(a)
+
+print('分词及词性：')
+result = psg.lcut('咨询A市人才购房补贴通知问题')
+print([(x.word, x.flag) for x in result])

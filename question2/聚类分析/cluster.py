@@ -9,7 +9,8 @@ from sklearn.cluster import DBSCAN
 
 from question2.数据清洗.date_format import get_date_interval
 
-# path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
+outpath2 = '/home/asimov/PycharmProjects/question_2/question2/answer/热点问题留言明细表.xls'
+outpath = './聚类结果明细表.xls'
 path = '/home/asimov/PycharmProjects/question_2/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
 pos_com = pd.read_excel(path)
 all_data = pd.read_excel(path)
@@ -43,8 +44,8 @@ for temp_theme in predict_data:
     data_cut = psg.cut(temp_theme)
     data_after_stop = []
     for i in data_cut:
-        if i not in stop_words:
-            if i != "":
+        if i.word not in stop_words:
+            if i.word != "":
                 data_after_stop.append(i.word)
                 word2flagdict[i.word] = i.flag
     keywords = " ".join(data_after_stop)
@@ -271,8 +272,6 @@ write_cluster_detail_xls_2 = pd.DataFrame(
      '留言时间': write_cluster_detail_xls["留言时间"],
      "时间范围": new_write_cluster_time},
     columns=["热度指数", "时间范围", "问题ID", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
-
-outpath = './聚类结果明细表.xls'
 write_cluster_detail_xls_2.to_excel(outpath, index=None)
 print(outpath, '导出成功!!!')
 
@@ -290,11 +289,21 @@ orders.sort(reverse=True)
 new_write_cluster_detail_id_tb2 = []
 for i in write_table2['热度指数']:
     new_write_cluster_detail_id_tb2.append(orders.index(i) + 1)
+# 导出前5热度问题
+five_loc = 0
+for i in new_write_cluster_detail_id_tb2:
+    if i > 5:
+        break
+    else:
+        five_loc += 1
+
 write_table2_2 = pd.DataFrame(
-    {"问题ID": new_write_cluster_detail_id_tb2, '留言主题': write_table2['留言主题'], '留言详情': write_table2['留言详情'],
-     '留言编号': write_table2['留言编号'], '留言用户': write_table2['留言用户'], '留言时间': write_table2['留言时间'],
-     "点赞数": write_table2['点赞数'], '反对数': write_table2['反对数']},
+    {"问题ID": new_write_cluster_detail_id_tb2[0:five_loc], '留言主题': list(write_table2['留言主题'])[0:five_loc],
+     '留言详情': list(write_table2['留言详情'])[0:five_loc],
+     '留言编号': list(write_table2['留言编号'])[0:five_loc], '留言用户': list(write_table2['留言用户'])[0:five_loc],
+     '留言时间': list(write_table2['留言时间'])[0:five_loc],
+     "点赞数": list(write_table2['点赞数'])[0:five_loc], '反对数': list(write_table2['反对数'])[0:five_loc]},
     columns=['问题ID', '留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '点赞数', '反对数'])
-outpath = './表2-热点问题留言明细表.xls'
-write_table2_2.to_excel(outpath, index=None)
-print(outpath, '导出成功!!!')
+
+write_table2_2.to_excel(outpath2, index=None)
+print(outpath2, '导出成功!!!')
