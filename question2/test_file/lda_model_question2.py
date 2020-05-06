@@ -22,7 +22,8 @@ jieba.load_userdict('./data/changsha_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
+stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
+                         encoding='GB18030', engine='python')
 # pd转列表拼接  iloc[:,0] 取第0列
 stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n']
 data_after_stop = data_cut.apply(lambda x: [i.strip() for i in x if i not in stop_words])
@@ -34,7 +35,8 @@ for temp_theme in predict_data:
     #                                allowPOS=(['n', 'ns', 'l', 'nr', 'nz'])))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
     data_cut = jieba.lcut(temp_theme)
-    stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
+    stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
+                             encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n']
 

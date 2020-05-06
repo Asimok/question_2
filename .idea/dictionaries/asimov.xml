@@ -3,11 +3,13 @@
     <words>
       <w>confrim</w>
       <w>convseg</w>
+      <w>cuda</w>
       <w>flagdict</w>
       <w>hhhh</w>
       <w>iloc</w>
       <w>jieba</w>
       <w>outpath</w>
+      <w>pretrained</w>
       <w>stopword</w>
       <w>textrank</w>
       <w>tfidf</w>

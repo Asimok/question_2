@@ -8,10 +8,10 @@ out_path = '../data/问题描述.xls'
 out_path2 = '../data/地点人群.xls'
 out_path3 = '../answer/热点问题表.xls'
 df_in = pd.read_excel(in_path)
-jieba.load_userdict('../data/places.txt')
-jieba.load_userdict('../data/changsha_transportation_ns.txt')
-jieba.load_userdict('../data/changsha_houses_ns.txt')
-jieba.load_userdict('../data/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 # -------------------------------------生成 问题描述------------------------------------
 max_id = df_in['问题ID'].max()

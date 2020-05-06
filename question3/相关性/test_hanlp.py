@@ -9,10 +9,10 @@ recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
 A = recognizer.predict([list('关于A市地铁7号线的相关建议')])
 print(A)
 
-jieba.load_userdict('../data/places.txt')
-jieba.load_userdict('../data/changsha_transportation_ns.txt')
-jieba.load_userdict('../data/changsha_houses_ns.txt')
-jieba.load_userdict('../data/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名

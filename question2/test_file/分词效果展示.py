@@ -32,10 +32,10 @@ for temp_theme in predict_data:
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('../data/places.txt')
-jieba.load_userdict('../data/changsha_transportation_ns.txt')
-jieba.load_userdict('../data/changsha_houses_ns.txt')
-jieba.load_userdict('../data/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 word2flagdict = {}
 data_after_jieba = []

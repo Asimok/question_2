@@ -25,7 +25,7 @@ for i in range(len(reply)):
     similarity.append(temp_similarity)
 similarity.index(0)
 pd.Series(similarity).max()
-pd.Series(interval).min()
+pd.Series(interval).median()
 # 分词后的相关性
 
 temp_message_detail = []
@@ -37,16 +37,16 @@ for index in reply:
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('../data/places.txt')
-jieba.load_userdict('../data/changsha_transportation_ns.txt')
-jieba.load_userdict('../data/changsha_houses_ns.txt')
-jieba.load_userdict('../data/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 
 def data_jieba(message_list):
     data_cut = pd.Series(message_list).apply(lambda x: jieba.lcut(x))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-    stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh',
+    stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
                              encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
@@ -73,3 +73,4 @@ data['分词后相关性'] = similarity_jieba
 data['回复间隔'] = interval
 
 data.to_excel(outpath)
+print('导出', outpath)

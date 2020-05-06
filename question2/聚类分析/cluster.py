@@ -19,14 +19,15 @@ predict_data = message_data['留言主题']
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('../data/places.txt')
-jieba.load_userdict('../data/changsha_transportation_ns.txt')
-jieba.load_userdict('../data/changsha_houses_ns.txt')
-jieba.load_userdict('../data/changsha_area_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_houses_ns.txt')
+jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
+stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
+                         encoding='GB18030', engine='python')
 # pd转列表拼接  iloc[:,0] 取第0列
 stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
 
@@ -44,9 +45,7 @@ for temp_theme in predict_data:
     data_after_jieba.append(keywords)
 # all_data['主题分词'] = data_after_jieba
 # all_data.to_excel('../聚类分析/附件3_labels.xlsx', index=None)
-
-# 自己造一个{“词语”:“词性”}的字典，方便后续使用词性
-# word2flagdict = {wordtocixing[i]:cixingofword[i] for i in range(len(wordtocixing))}
+# 造一个{“词语”:“词性”}的字典，方便后续使用词性
 # 短文本特征提取
 vectorizer = CountVectorizer()
 transformer = TfidfTransformer()  # 该类会统计每个词语的tf-idf权值
@@ -69,10 +68,10 @@ for i in range(len(word)):
         continue
 
 wordflagweight = np.array(wordflagweight)
-newweight = weight.copy()
+new_weight = weight.copy()
 for i in range(len(weight)):
     for j in range(len(word)):
-        newweight[i][j] = weight[i][j] * wordflagweight[j]
+        new_weight[i][j] = weight[i][j] * wordflagweight[j]
 
 hot_score = []  # 热度指数
 hot_score_tb2 = []
@@ -102,7 +101,7 @@ like_and_dislike = 0
 # DBSCAN聚类分析
 
 DBS_clf = DBSCAN(eps=0.9, min_samples=4)
-DBS_clf.fit(newweight)
+DBS_clf.fit(new_weight)
 labels_ = DBS_clf.labels_
 
 
@@ -161,12 +160,12 @@ def get_interval_min_max(temp_loc_list):
 
 
 def get_single_like_and_dislike(temp_loc_list):
-    single_like_and_dislike = 0
+    temp_single_like_and_dislike = 0
     for loc in temp_loc_list:
-        single_like_and_dislike += temp_like[loc]
-        single_like_and_dislike += temp_dislike[loc]
+        temp_single_like_and_dislike += temp_like[loc]
+        temp_single_like_and_dislike += temp_dislike[loc]
 
-    return single_like_and_dislike
+    return temp_single_like_and_dislike
 
 
 labels_original, labels_loc = labels_to_original(labels_, data_after_jieba)

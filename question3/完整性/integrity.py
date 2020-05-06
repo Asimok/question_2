@@ -17,7 +17,7 @@ def data_jieba(message_list):
 
     data_cut = pd.Series(message_list).apply(lambda x: jieba.lcut(x))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-    stop_words = pd.read_csv('../data/stopword.txt',
+    stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt',
                              sep='hhhh',
                              encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
