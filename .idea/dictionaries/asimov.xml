@@ -10,6 +10,7 @@
       <w>jieba</w>
       <w>outpath</w>
       <w>pretrained</w>
+      <w>sampleses</w>
       <w>stopword</w>
       <w>textrank</w>
       <w>tfidf</w>

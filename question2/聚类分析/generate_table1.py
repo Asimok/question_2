@@ -14,7 +14,7 @@ jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/d
 jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
 # -------------------------------------生成 问题描述------------------------------------
-max_id = df_in['问题ID'].max()
+
 df_hot_score = df_in['热度指数'].tolist()
 hot_score = []
 for i in df_hot_score:
@@ -26,7 +26,11 @@ for i in df_time_span:
     if not str(i).__eq__(' '):
         time_span.append(i)
 abb = []
-for question_id in range(1, max_id + 1):
+question_list = []
+for i in list(df_in['问题ID']):
+    if i!=' ':
+        question_list.append(i)
+for question_id in question_list[0:5]:
     question_id = int(question_id)
     df_in_id = df_in[df_in['问题ID'] == question_id]
     title = '\n'.join(df_in_id['留言主题'].tolist())
@@ -36,7 +40,7 @@ for question_id in range(1, max_id + 1):
     abb.append(abstract)
     print("主题句为：", abstract)
 # print(abb)
-df1 = pd.DataFrame({'问题ID': [i for i in range(1, max_id + 1)], '问题描述': abb})
+df1 = pd.DataFrame({'问题ID': [i for i in range(1, 5 + 1)], '问题描述': abb})
 df1.to_excel(out_path, index=None)
 # -----------------------------------提取 地点人群------------------------------------
 tokenizer = hanlp.load('PKU_NAME_MERGED_SIX_MONTHS_CONVSEG')
@@ -57,7 +61,7 @@ for i in range(len(loc_people)):
         for j in loc_people[i]:
             temp_str += j[0]
     str_loc_people.append(temp_str)
-df2 = pd.DataFrame({'问题ID': [i for i in range(1, max_id + 1)], '地点/人群': str_loc_people, '问题描述': abb},
+df2 = pd.DataFrame({'问题ID': question_list[0:5], '地点/人群': str_loc_people, '问题描述': abb},
                    columns=['问题ID', '地点/人群', '问题描述'])
 df2.to_excel(out_path2, index=None)
 # -------------------------------生成 表1-热点问题表------------------------------
@@ -66,7 +70,7 @@ write_tb1_hot_score = hot_score[0:5]
 write_tb1_loc_people = str_loc_people[0:5]
 write_tb1_time_span = time_span[0:5]
 
-df3 = pd.DataFrame({'热度排名': [i for i in range(1, 6)], '问题ID': [i for i in range(1, 6)], '热度指数': write_tb1_hot_score,
+df3 = pd.DataFrame({'热度排名': [i for i in range(1, 6)], '问题ID':question_list[0:5], '热度指数': write_tb1_hot_score,
                     '时间范围': write_tb1_time_span, '地点/人群': write_tb1_loc_people, '问题描述': write_tb1_abb},
                    columns=['热度排名', '问题ID', '热度指数', '时间范围', '地点/人群', '问题描述'])
 df3.to_excel(out_path3, index=None)

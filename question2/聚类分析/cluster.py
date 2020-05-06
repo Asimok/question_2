@@ -9,6 +9,9 @@ from sklearn.feature_extraction.text import TfidfTransformer
 
 from question2.数据清洗.date_format import get_date_interval
 
+# DBSCAN 参数
+temp_eps = 0.9
+temp_min_sampleses = 4
 outpath = '../data/聚类结果明细表.xls'
 outpath2 = '../answer/热点问题留言明细表.xls'
 path = '../data/去除30天内同一用户相似度0.75+的留言.xls'
@@ -100,7 +103,7 @@ temp_dislike = list(message_data['反对数'])
 like_and_dislike = 0
 # DBSCAN聚类分析
 
-DBS_clf = DBSCAN(eps=0.9, min_samples=4)
+DBS_clf = DBSCAN(eps=temp_eps, min_samples=temp_min_sampleses)
 DBS_clf.fit(new_weight)
 labels_ = DBS_clf.labels_
 
@@ -212,20 +215,12 @@ for i in range(len(labels_loc) - 1):
         hot_score_tb2.append(temp_hot)
         hot_score.append(temp_hot)
         time_span.append(time_span_inner)
-        # hot_score.append("  ")
-        # time_span.append("  ")
-    # write_cluster_detail.append("   ")
-    # write_cluster_theme.append("   ")
-    # write_cluster_detail_id.append("   ")
-    # write_cluster_id.append("   ")
-    # write_cluster_user.append("   ")
-    # write_cluster_time.append("   ")
 
 # ----------------------------聚类结果明细表 -------------------------------------#
 write_cluster_detail_xls = pd.DataFrame(
-    {"热度指数": hot_score, "聚类ID": write_cluster_detail_id, '留言主题': write_cluster_theme, '留言详情': write_cluster_detail,
+    {"热度指数": hot_score, "簇ID": write_cluster_detail_id, '留言主题': write_cluster_theme, '留言详情': write_cluster_detail,
      '留言编号': write_cluster_id, '留言用户': write_cluster_user, '留言时间': write_cluster_time, "时间范围": time_span},
-    columns=["热度指数", "时间范围", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
+    columns=["热度指数", "时间范围", '簇ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
 write_cluster_detail_xls.sort_values("热度指数", inplace=True, ascending=False)
 orders = list(set(list(hot_score)))
 orders.sort(reverse=True)
@@ -235,12 +230,12 @@ for i in write_cluster_detail_xls['热度指数']:
 new_write_cluster_id = []
 new_write_cluster_time = []
 new_write_cluster_hot = []
-new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[0])
-for i in range(1, len(write_cluster_detail_xls["聚类ID"])):
-    if list(write_cluster_detail_xls["聚类ID"])[i] == list(write_cluster_detail_xls["聚类ID"])[i - 1]:
+new_write_cluster_id.append(list(write_cluster_detail_xls["簇ID"])[0])
+for i in range(1, len(write_cluster_detail_xls["簇ID"])):
+    if list(write_cluster_detail_xls["簇ID"])[i] == list(write_cluster_detail_xls["簇ID"])[i - 1]:
         new_write_cluster_id.append(" ")
     else:
-        new_write_cluster_id.append(list(write_cluster_detail_xls["聚类ID"])[i])
+        new_write_cluster_id.append(list(write_cluster_detail_xls["簇ID"])[i])
 new_write_cluster_time.append(list(write_cluster_detail_xls["时间范围"])[0])
 for i in range(1, len(write_cluster_detail_xls["时间范围"])):
     if list(write_cluster_detail_xls["时间范围"])[i] == list(write_cluster_detail_xls["时间范围"])[i - 1]:
@@ -255,12 +250,12 @@ for i in range(1, len(write_cluster_detail_xls["热度指数"])):
         new_write_cluster_hot.append(list(write_cluster_detail_xls["热度指数"])[i])
 write_cluster_detail_xls_2 = pd.DataFrame(
     {"热度指数": new_write_cluster_hot, "问题ID": new_write_cluster_detail_id_tb2,
-     "聚类ID": new_write_cluster_id,
+     "簇ID": new_write_cluster_id,
      '留言主题': write_cluster_detail_xls["留言主题"], '留言详情': write_cluster_detail_xls["留言详情"],
      '留言编号': write_cluster_detail_xls["留言编号"], '留言用户': write_cluster_detail_xls["留言用户"],
      '留言时间': write_cluster_detail_xls["留言时间"],
      "时间范围": new_write_cluster_time},
-    columns=["热度指数", "时间范围", "问题ID", '聚类ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
+    columns=["热度指数", "时间范围", "问题ID", '簇ID', '留言编号', '留言用户', '留言时间', '留言主题', '留言详情'])
 write_cluster_detail_xls_2.to_excel(outpath, index=None)
 print(outpath, '导出成功!!!')
 
@@ -287,7 +282,7 @@ for i in new_write_cluster_detail_id_tb2:
         five_loc += 1
 
 write_table2_2 = pd.DataFrame(
-    {"问题ID": new_write_cluster_detail_id_tb2[0:five_loc], '留言主题': list(write_table2['留言主题'])[0:five_loc],
+    {"问题ID": write_cluster_detail_xls["簇ID"][0:five_loc], '留言主题': list(write_table2['留言主题'])[0:five_loc],
      '留言详情': list(write_table2['留言详情'])[0:five_loc],
      '留言编号': list(write_table2['留言编号'])[0:five_loc], '留言用户': list(write_table2['留言用户'])[0:five_loc],
      '留言时间': list(write_table2['留言时间'])[0:five_loc],
@@ -296,3 +291,18 @@ write_table2_2 = pd.DataFrame(
 
 write_table2_2.to_excel(outpath2, index=None)
 print(outpath2, '导出成功!!!')
+
+# 绘图数据
+cluster_num = len(labels_loc) - 1
+setting = 'eps=' + str(temp_eps) + '_min_samples=' + str(temp_min_sampleses)
+with open('../data/参数_簇数关系(min_sampleses=4).txt', 'a+') as f:
+    f.writelines(setting + ' ' + str(cluster_num) + '\n')
+
+sub_cluster_num = []
+sub_cluster_id = []
+for i in range(cluster_num):
+    sub_cluster_num.append(len(labels_loc[i]))
+    sub_cluster_id.append('簇' + str(i))
+
+write_sub = pd.DataFrame({'簇ID': sub_cluster_id, '留言数量': sub_cluster_num}, columns=['簇ID', '留言数量'])
+write_sub.to_excel('../data/' + setting + '_簇数详情.xls', index=None)
