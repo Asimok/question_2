@@ -10,7 +10,7 @@ path= '//question2/数据清洗/附件3.xlsx'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
-# 同一时间格式
+# 统一时间格式
 # for date in data['留言时间']:
 data['留言时间']=data['留言时间'].apply(lambda x:str(x).strip().replace('-','/'))
 

@@ -5,18 +5,13 @@ from question2.数据清洗.sentence_similarity import tf_similarity
 import pandas as pd
 
 # head = '您好！您的留言已收悉。现将有关情况回复如下：'
-data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4.xlsx')
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 message_detail = data['留言详情']
 reply = data['答复意见']
 # reply.apply(lambda x: str(x).replace(head, ''))
 message_time = list(data['留言时间'])
 reply_time = list(data['答复时间'])
-# 日期规范化
-for i in range(len(reply)):
-    if not str(message_time[i]).strip().__contains__(':'):
-        message_time[i] = str(message_time[i]).strip() + ' 00:00:00'
-    if not str(reply_time[i]).strip().__contains__(':'):
-        reply_time[i] = str(reply_time[i]).strip() + ' 00:00:00'
+
 # 答复时间间隔
 interval = []
 for i in range(len(reply)):
@@ -35,19 +30,9 @@ pd.Series(interval).min()
 temp_message_detail = []
 temp_reply = []
 for index in message_detail:
-    temp_message_detail.append(
-        str(index).strip().replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000',
-                                                                                                          '').replace(
-            '*',
-            '').replace(
-            '\xa0', ''))
+    temp_message_detail.append(index)
 for index in reply:
-    temp_reply.append(
-        str(index).strip().replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000',
-                                                                                                          '').replace(
-            '*',
-            '').replace(
-            '\xa0', ''))
+    temp_reply.append(index)
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
@@ -60,7 +45,7 @@ jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/�
 def data_jieba(message_list):
     data_cut = pd.Series(message_list).apply(lambda x: jieba.lcut(x))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-    stop_words = pd.read_csv('//question2/data/stopword.txt', sep='hhhh',
+    stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
                              encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
