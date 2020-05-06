@@ -5,14 +5,13 @@ from question2.数据清洗.date_format import get_date_interval
 from question2.数据清洗.sentence_similarity import tf_similarity
 
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '反对数', '点赞数']
-# path = '/home/asimov/文档/2020数据挖掘/C题/示例数据/附件3.xlsx'
-path= '//question2/数据清洗/附件3.xlsx'
+
+path = '../data/附件3_清洗后.xlsx'
+outpath = '../data/去除30天内同一用户相似度0.75+的留言.xls'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
-# 统一时间格式
-# for date in data['留言时间']:
-data['留言时间']=data['留言时间'].apply(lambda x:str(x).strip().replace('-','/'))
+
 
 # 去重复
 def remove_user_themes(temp_list_fun, interval_day, similarity):
@@ -62,5 +61,4 @@ for temp_list in user_list:
         # user_list_end.append(temp_list)
         user_df_end = pd.concat([user_df_end, temp_list], axis=0)
 
-user_df_end.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls',
-                     index=None)
+user_df_end.to_excel(outpath, index=None)

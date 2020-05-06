@@ -23,14 +23,17 @@ for i in reply:
     if str(i).__contains__('如下：'):
         temp = i[0:str(i).index('如下：') + 3]
         i = str(i).replace(temp, '')
-        temp_header += temp
+        if len(temp) < 80:
+            temp_header += temp
     if str(i).__contains__('回复：'):
         temp = i[0:str(i).index('回复：') + 3]
         i = str(i).replace(temp, '')
-        temp_header += temp
+        if len(temp) < 80:
+            temp_header += temp
     if str(i).__contains__('感谢您对'):
         temp = i[find_last(i, '感谢您对'):]
-        temp_tail += temp
+        if len(temp) < 80:
+            temp_tail += temp
     header.append(temp_header)
     tail.append(temp_tail)
 write_data = pd.DataFrame({'开头': header, '结尾': tail})

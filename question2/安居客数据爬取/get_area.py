@@ -1,4 +1,3 @@
-import pandas as pd
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,7 +9,7 @@ area_url = 'https://cs.anjuke.com/community/?from=navigation'
 driver.get(area_url)
 html = driver.page_source
 dom = etree.HTML(html, etree.HTMLParser(encoding='utf-8'))
-data =[]
+data = []
 # area = dom.xpath(
 #     '//*[@id="list-content"]/div/div[1]/h3/a/@title')
 # data.append(area)
@@ -28,14 +27,16 @@ while i < 100:
         '//*[@id="list-content"]/div/div[1]/h3/a/@title')
     for j in area:
         data.append(j)
-    condition = driver.find_element_by_css_selector('body > div.w1180 > div.maincontent > div.page-content > div > a.aNxt')  # 寻找下一页按钮
+    condition = driver.find_element_by_css_selector(
+        'body > div.w1180 > div.maincontent > div.page-content > div > a.aNxt')  # 寻找下一页按钮
     if not condition:
         break  # 已经到达最后一页
-    confrim_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'body > div.w1180 > div.maincontent > div.page-content > div > a.aNxt')))
+    confrim_btn = wait.until(EC.element_to_be_clickable(
+        (By.CSS_SELECTOR, 'body > div.w1180 > div.maincontent > div.page-content > div > a.aNxt')))
     confrim_btn.click()  # 翻页
     i += 1
 
-with open('./changsha_area_ns.txt', 'w') as f:
+with open('../data/changsha_area_ns.txt', 'w') as f:
     for i in data:
         f.write(i)
         f.write(' ')

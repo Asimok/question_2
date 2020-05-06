@@ -2,7 +2,6 @@
 分成7类 提取关键词
 """
 import jieba.analyse
-import jieba.posseg as psg
 import pandas as pd
 
 classification = ['城乡建设', '环境保护', '交通运输', '教育文体', '劳动和社会保障', '商贸旅游', '卫生计生']
@@ -17,17 +16,17 @@ ldhshbz_data = data.loc[data['预测一级标签'] == classification[4]]
 smly_data = data.loc[data['预测一级标签'] == classification[5]]
 wsjs_data = data.loc[data['预测一级标签'] == classification[6]]
 
-cxjs_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/cxjs_data.xls')
-hjbh_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/hjbh_data.xls')
-jtys_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/jtys_data.xls')
-jywt_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/jywt_data.xls')
-ldhshbz_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/ldhshbz_data.xls')
-smly_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/smly_data.xls')
-wsjs_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/classifications_seven/wsjs_data.xls')
+cxjs_data.to_excel('../classifications_seven/cxjs_data.xls')
+hjbh_data.to_excel('../classifications_seven/hjbh_data.xls')
+jtys_data.to_excel('../classifications_seven/jtys_data.xls')
+jywt_data.to_excel('../classifications_seven/jywt_data.xls')
+ldhshbz_data.to_excel('../classifications_seven/ldhshbz_data.xls')
+smly_data.to_excel('../classifications_seven/smly_data.xls')
+wsjs_data.to_excel('../classifications_seven/wsjs_data.xls')
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('./data/new_places.txt')
+jieba.load_userdict('./data/places.txt')
 jieba.load_userdict('./data/changsha_ns.txt')
 
 

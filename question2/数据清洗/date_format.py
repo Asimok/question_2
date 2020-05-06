@@ -15,5 +15,4 @@ def get_date_interval(date1, date2):
     # print('{}  比  {}  早：{}天'.format(d1, d2, d.days))
     return d.days
 
-
 # get_date_interval('2019/2/21 12:02:17', '2019/2/21 16:06:38')

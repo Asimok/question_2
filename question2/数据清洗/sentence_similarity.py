@@ -1,6 +1,7 @@
-from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 from scipy.linalg import norm
+from sklearn.feature_extraction.text import CountVectorizer
+
 
 # 计算句子相似度
 def tf_similarity(s1, s2):

@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3.xlsx', sheet_name='Sheet1')
+data = pd.read_excel('../data/附件3.xlsx', sheet_name='Sheet1')
 
 predict_data = []
 
@@ -21,4 +21,3 @@ with open(path + 'predict_' + name + '.txt', 'w') as f:
         f.write('\t')
         f.write('0')
         f.write('\n')
-

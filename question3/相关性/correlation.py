@@ -1,10 +1,11 @@
 import jieba
+import pandas as pd
 
 from question2.数据清洗.date_format import get_date_interval
 from question2.数据清洗.sentence_similarity import tf_similarity
-import pandas as pd
 
-# head = '您好！您的留言已收悉。现将有关情况回复如下：'
+outpath = '../data/相关性_回复间隔.xls'
+
 data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 message_detail = data['留言详情']
 reply = data['答复意见']
@@ -36,16 +37,16 @@ for index in reply:
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('../data/places.txt')
+jieba.load_userdict('../data/changsha_transportation_ns.txt')
+jieba.load_userdict('../data/changsha_houses_ns.txt')
+jieba.load_userdict('../data/changsha_area_ns.txt')
 
 
 def data_jieba(message_list):
     data_cut = pd.Series(message_list).apply(lambda x: jieba.lcut(x))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-    stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt', sep='hhhh',
+    stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh',
                              encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
@@ -71,4 +72,4 @@ data['相关性'] = similarity
 data['分词后相关性'] = similarity_jieba
 data['回复间隔'] = interval
 
-data.to_excel('../data/相关性_回复间隔.xls')
+data.to_excel(outpath)

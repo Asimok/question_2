@@ -1,6 +1,7 @@
 import jieba.analyse
 import jieba.posseg as psg
-jieba.load_userdict('../data/new_places.txt')
+
+jieba.load_userdict('../data/places.txt')
 jieba.load_userdict('../data/new_places_country.txt')
 jieba.load_userdict('../data/weibo_jieba.txt')
 str = '反映M9县春华镇金鼎村水泥路、自来水到户的问题'

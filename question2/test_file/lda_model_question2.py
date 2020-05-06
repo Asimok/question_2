@@ -3,11 +3,11 @@ import pandas as pd
 from gensim.corpora import Dictionary
 from gensim.models import LdaModel
 
-pos_com = pd.read_excel('./classifications_seven/cxjs_data.xls')
+message_data = pd.read_excel('./classifications_seven/cxjs_data.xls')
 
 predict_data = []
 
-for index in pos_com['留言详情']:
+for index in message_data['留言详情']:
     predict_data.append(
         str(index).strip().replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000',
                                                                                                           '').replace(
@@ -17,12 +17,12 @@ for index in pos_com['留言详情']:
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('./data/new_places.txt')
+jieba.load_userdict('./data/places.txt')
 jieba.load_userdict('./data/changsha_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
-stop_words = pd.read_csv('data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
+stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
 # pd转列表拼接  iloc[:,0] 取第0列
 stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n']
 data_after_stop = data_cut.apply(lambda x: [i.strip() for i in x if i not in stop_words])
@@ -34,7 +34,7 @@ for temp_theme in predict_data:
     #                                allowPOS=(['n', 'ns', 'l', 'nr', 'nz'])))
     # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
     data_cut = jieba.lcut(temp_theme)
-    stop_words = pd.read_csv('data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
+    stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
     # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n']
 

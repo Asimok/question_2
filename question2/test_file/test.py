@@ -1,15 +1,15 @@
 import jieba
 from jieba import analyse
 
-jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('../data/places.txt')
+jieba.load_userdict('../data/changsha_transportation_ns.txt')
+jieba.load_userdict('../data/changsha_houses_ns.txt')
+jieba.load_userdict('../data/changsha_area_ns.txt')
 
 
 def textrank_extract(text, keyword_num=10):
     textrank = analyse.textrank
-    # analyse.set_stop_words('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt',encoding='gb18030')
+    # analyse.set_stop_words('../data/stopword.txt',encoding='gb18030')
     keywords = textrank(text, keyword_num)
     # 输出抽取出的关键词
     for keyword in keywords:
@@ -19,7 +19,7 @@ def textrank_extract(text, keyword_num=10):
 
 def tfidf_extract(text, keyword_num=10):
     tfidf = analyse.extract_tags
-    # analyse.set_stop_words('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt')
+    # analyse.set_stop_words('../data/stopword.txt')
     keywords = tfidf(text, keyword_num)
     # 输出抽取出的关键词
     for keyword in keywords:
@@ -44,7 +44,7 @@ tfidf_extract(text)
 print('TextRank模型结果：')
 textrank_extract(text)
 jieba.analyse.extract_tags(sentence=text, topK=4, withWeight=False,
-                           allowPOS=(['ns','n']))
+                           allowPOS=(['ns', 'n']))
 # TF - IDF模型结果：
 # 晋江市 / 救助 / 爱心 / 基金会 / 公益活动 / 城市 / 中华 / 许嘉璐 / 陈健倩 / 孤老 /
 # TextRank模型结果：

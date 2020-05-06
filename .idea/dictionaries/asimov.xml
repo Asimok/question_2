@@ -4,8 +4,11 @@
       <w>confrim</w>
       <w>convseg</w>
       <w>flagdict</w>
+      <w>hhhh</w>
+      <w>iloc</w>
       <w>jieba</w>
       <w>outpath</w>
+      <w>stopword</w>
       <w>textrank</w>
       <w>tfidf</w>
       <w>vectorizer</w>

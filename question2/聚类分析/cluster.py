@@ -1,42 +1,34 @@
 import jieba.analyse
-import pandas as pd
-import numpy as np
 import jieba.analyse
 import jieba.posseg as psg
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
+import pandas as pd
 from sklearn.cluster import DBSCAN
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 
 from question2.数据清洗.date_format import get_date_interval
 
-outpath2 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/answer/热点问题留言明细表.xls'
-outpath = './聚类结果明细表.xls'
-path = '//question2/数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
-pos_com = pd.read_excel(path)
+outpath = '../data/聚类结果明细表.xls'
+outpath2 = '../answer/热点问题留言明细表.xls'
+path = '../data/去除30天内同一用户相似度0.75+的留言.xls'
+message_data = pd.read_excel(path)
 all_data = pd.read_excel(path)
-predict_data = []
+predict_data = message_data['留言主题']
 
-for index in pos_com['留言主题']:
-    predict_data.append(
-        str(index).strip().replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000',
-                                                                                                          '').replace(
-            '*',
-            '').replace(
-            '\xa0', ''))
 """
 l:习用语 nr:人名 nz:其他专名 ns:地名
 """
-jieba.load_userdict('../data/new_places.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/图吧数据爬取/changsha_transportation_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_houses_ns.txt')
-jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/安居客数据爬取/changsha_area_ns.txt')
+jieba.load_userdict('../data/places.txt')
+jieba.load_userdict('../data/changsha_transportation_ns.txt')
+jieba.load_userdict('../data/changsha_houses_ns.txt')
+jieba.load_userdict('../data/changsha_area_ns.txt')
 
 data_cut = pd.Series(predict_data).apply(lambda x: jieba.lcut(x))
 # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
 stop_words = pd.read_csv('../data/stopword.txt', sep='hhhh', encoding='GB18030', engine='python')
 # pd转列表拼接  iloc[:,0] 取第0列
 stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
-data_after_stop = data_cut.apply(lambda x: [i.strip() for i in x if i not in stop_words])
 
 word2flagdict = {}
 data_after_jieba = []
@@ -51,7 +43,7 @@ for temp_theme in predict_data:
     keywords = " ".join(data_after_stop)
     data_after_jieba.append(keywords)
 # all_data['主题分词'] = data_after_jieba
-# all_data.to_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/聚类分析/附件3_labels.xlsx', index=None)
+# all_data.to_excel('../聚类分析/附件3_labels.xlsx', index=None)
 
 # 自己造一个{“词语”:“词性”}的字典，方便后续使用词性
 # word2flagdict = {wordtocixing[i]:cixingofword[i] for i in range(len(wordtocixing))}
@@ -99,13 +91,13 @@ write_cluster_detail_id_tb2 = []
 write_cluster_time_tb2 = []
 write_cluster_like_tb2 = []
 write_cluster_dislike_tb2 = []
-temp_detail = list(pos_com['留言详情'])
-temp_theme = list(pos_com['留言主题'])
-temp_user = list(pos_com['留言用户'])
-temp_id = list(pos_com['留言编号'])
-temp_time = list(pos_com['留言时间'])
-temp_like = list(pos_com['点赞数'])
-temp_dislike = list(pos_com['反对数'])
+temp_detail = list(message_data['留言详情'])
+temp_theme = list(message_data['留言主题'])
+temp_user = list(message_data['留言用户'])
+temp_id = list(message_data['留言编号'])
+temp_time = list(message_data['留言时间'])
+temp_like = list(message_data['点赞数'])
+temp_dislike = list(message_data['反对数'])
 like_and_dislike = 0
 # DBSCAN聚类分析
 
@@ -131,8 +123,6 @@ def labels_to_original(labels, original_corpus):
 
 def get_interval(temp_loc_list):
     # 去除1年之外的数据
-    # min_date = '2099/12/31 00:00:00'
-    # max_date = '2000/12/01 00:00:00'
     min_date = temp_time[0]
     max_date = temp_time[0]
     # 找到最大日期

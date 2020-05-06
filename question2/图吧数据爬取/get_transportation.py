@@ -1,7 +1,5 @@
 from lxml import etree
 from selenium import webdriver
-import pickle
-import pandas as pd
 
 driver = webdriver.Chrome()
 data = []
@@ -22,7 +20,7 @@ data_list = ['G11', 'G12', 'G14', 'G15', 'G20', 'G21', 'G30', 'G31', 'G40', 'G50
 for index in data_list:
     get_data(index)
 
-with open('./changsha_transportation_ns.txt', 'w') as f:
+with open('../data/changsha_transportation_ns.txt', 'w') as f:
     for i in data:
         f.write(i)
         f.write(' ')

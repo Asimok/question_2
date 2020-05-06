@@ -1,4 +1,3 @@
-import pandas as pd
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,7 +9,7 @@ houses_url = 'https://cs.fang.anjuke.com/loupan/?pi=baidu-cpcaf-cs-ty1&kwid=1655
 driver.get(houses_url)
 html = driver.page_source
 dom = etree.HTML(html, etree.HTMLParser(encoding='utf-8'))
-data =[]
+data = []
 # houses = dom.xpath(
 #     '//*[@id="container"]/div[2]/div[1]/div[@class="key-list imglazyload"]/div/div/a[1]/span/text()')
 # data.append(houses)
@@ -28,14 +27,16 @@ while i < 100:
         '//*[@id="container"]/div[2]/div[1]/div[@class="key-list imglazyload"]/div/div/a[1]/span/text()')
     for j in houses:
         data.append(j)
-    condition = driver.find_element_by_css_selector('#container > div.list-contents.theme-ajk-listcont > div.list-results > div.list-page > div > a.next-page.next-link')  # 寻找下一页按钮
+    condition = driver.find_element_by_css_selector(
+        '#container > div.list-contents.theme-ajk-listcont > div.list-results > div.list-page > div > a.next-page.next-link')  # 寻找下一页按钮
     if not condition:
         break  # 已经到达最后一页
-    confrim_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#container > div.list-contents.theme-ajk-listcont > div.list-results > div.list-page > div > a.next-page.next-link')))
+    confrim_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,
+                                                         '#container > div.list-contents.theme-ajk-listcont > div.list-results > div.list-page > div > a.next-page.next-link')))
     confrim_btn.click()  # 翻页
     i += 1
 
-with open('./changsha_houses_ns.txt', 'w') as f:
+with open('../data/changsha_houses_ns.txt', 'w') as f:
     for i in data:
         f.write(i)
         f.write(' ')

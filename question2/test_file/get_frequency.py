@@ -2,7 +2,6 @@
 获得留言主题的词频
 """
 
-import jieba
 import matplotlib.pyplot  as plt
 import pandas as pd
 from wordcloud import WordCloud
@@ -32,7 +31,7 @@ for temp_theme in data['地点/人群']:
     data_score.append(round(temp_score, 4))
 # data_score=pd.DataFrame({'热度指数':data_score})
 data['热度指数'] = data_score
-data = data.sort_values("热度指数", inplace=False,ascending=False)
+data = data.sort_values("热度指数", inplace=False, ascending=False)
 data.to_excel('./classifications_seven_PEOPLE_AND_LOC/教育文体——地点_人群_主题.xls', index=None)
 
 # ----------------------------------词云-------------------------------------

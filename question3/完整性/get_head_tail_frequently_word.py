@@ -1,11 +1,6 @@
-# 计算答复意见完整性
+# 获取标准开头结尾高频词
 import jieba
 import pandas as pd
-
-from question3.完整性.get_head_tail_frequently_word import get_frequency
-
-data = pd.read_excel('../data/附件4_清洗后.xlsx')
-reply = data['答复意见']
 
 
 def data_jieba(message_list):
@@ -28,21 +23,30 @@ def data_jieba(message_list):
     for temp_theme in data_after_stop:
         # keywords = " ".join(temp_theme)
         # data_after_jieba.append(keywords)
-        # for i in temp_theme:
-        data_after_jieba.append(temp_theme)
+        for i in temp_theme:
+            data_after_jieba.append(i)
     return data_after_jieba
 
 
-word_frequency = get_frequency()
-word_frequency_key = list(word_frequency.keys())
-reply_jieba = data_jieba(reply)
-# 计算完整性
-score = []
-for temp_reply in reply_jieba:
-    temp_score = 0
-    for i in temp_reply:
-        if word_frequency_key.__contains__(i):
-            temp_score += word_frequency.get(i)
-    score.append(temp_score)
-data['完整性'] = score
-data.to_excel('../data/回复完整性.xls')
+def get_frequency():
+    data = pd.read_excel('../data/开头结尾.xls')
+    head = data['开头']
+    tail = data['结尾']
+    head_sub = []
+    tail_sub = []
+    for i in head:
+        if str(i) != 'nan':
+            head_sub.append(i)
+    for i in tail:
+        if str(i) != 'nan':
+            tail_sub.append(i)
+
+    d1 = data_jieba(head_sub)
+    d2 = data_jieba(tail_sub)
+    d3 = pd.Series(d2 + d1)
+    num_count = d3.count()
+    word_frequency = dict(d3.value_counts())
+
+    for keys in word_frequency.keys():
+        word_frequency[keys] = word_frequency.get(keys) / num_count
+    return word_frequency
