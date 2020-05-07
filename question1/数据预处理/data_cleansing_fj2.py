@@ -3,7 +3,6 @@ import pandas as pd
 
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '一级标签']
 
-
 path = '../data/附件2.xlsx'
 outpath = '../data/附件2_清洗后.xlsx'
 data = pd.read_excel(path)

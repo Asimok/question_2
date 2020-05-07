@@ -1,5 +1,3 @@
-import random
-import matplotlib.pyplot as plt
 import pandas as pd
 
 classification = ['城乡建设', '环境保护', '交通运输', '教育文体', '劳动和社会保障', '商贸旅游', '卫生计生']

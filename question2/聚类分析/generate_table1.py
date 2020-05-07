@@ -28,7 +28,7 @@ for i in df_time_span:
 abb = []
 question_list = []
 for i in list(df_in['问题ID']):
-    if i!=' ':
+    if i != ' ':
         question_list.append(i)
 for question_id in question_list[0:5]:
     question_id = int(question_id)
@@ -70,7 +70,7 @@ write_tb1_hot_score = hot_score[0:5]
 write_tb1_loc_people = str_loc_people[0:5]
 write_tb1_time_span = time_span[0:5]
 
-df3 = pd.DataFrame({'热度排名': [i for i in range(1, 6)], '问题ID':question_list[0:5], '热度指数': write_tb1_hot_score,
+df3 = pd.DataFrame({'热度排名': [i for i in range(1, 6)], '问题ID': question_list[0:5], '热度指数': write_tb1_hot_score,
                     '时间范围': write_tb1_time_span, '地点/人群': write_tb1_loc_people, '问题描述': write_tb1_abb},
                    columns=['热度排名', '问题ID', '热度指数', '时间范围', '地点/人群', '问题描述'])
 df3.to_excel(out_path3, index=None)
