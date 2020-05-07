@@ -2,8 +2,8 @@ import jieba.analyse
 import jieba.posseg as psg
 import pandas as pd
 
-# path = '../数据清洗/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
-path = '../数据清洗/去除30天内同一用户相似度0.75+的留言.xls'
+# path = '../附件2数据预处理/示例数据_去除30天内同一用户相似度0.75+的留言.xls'
+path = '../数据预处理/去除30天内同一用户相似度0.75+的留言.xls'
 message_data = pd.read_excel(path)
 all_data = pd.read_excel(path)
 predict_data = []

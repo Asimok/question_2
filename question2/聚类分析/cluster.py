@@ -7,7 +7,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 
-from question2.数据清洗.date_format import get_date_interval
+from question2.附件3数据预处理.date_format import get_date_interval
 
 # DBSCAN 参数
 temp_eps = 0.9
