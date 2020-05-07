@@ -1,7 +1,10 @@
 # 根据用户ID分类留言
+import hanlp
 import pandas as pd
 
-cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '答复意见', '答复时间']
+from question3.相关性.get_head_tail import get_head_tail
+
+cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '答复意见', '答复时间', '是否包含机构']
 
 path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4.xlsx'
 outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx'
@@ -32,5 +35,35 @@ data['留言主题'] = data['留言主题'].apply(
     lambda x: str(x).strip().replace('\r', '').replace('\n', '').replace('\t', '').replace('\u3000', '').replace(
         '\xa0', ''))
 
+read_reply = data['答复意见']
+reply = []
+# 去除标准开头结尾
+for i in read_reply:
+    head, tail = get_head_tail(i)
+    temp_str = str(i).replace(head, '')
+    temp_str = temp_str.replace(tail, '')
+    reply.append(temp_str)
+
+# 是否包含机构
+contain_nt_list = []
+recognizer = hanlp.load(hanlp.pretrained.ner.MSRA_NER_BERT_BASE_ZH)
+for i in range(len(reply)):
+    print(i)
+    contain_nt = False
+    for simple_str in str(reply[i]).split('，'):
+        recognizer_nt = recognizer.predict([list(simple_str)])
+        for nt_id in recognizer_nt:
+            for j in nt_id:
+                if j[1] == 'NT':
+                    contain_nt = True
+                    contain_nt_list.append(contain_nt)
+                    break
+            if contain_nt:
+                break
+        if contain_nt:
+            break
+    if not contain_nt:
+        contain_nt_list.append(contain_nt)
+data['是否包含机构'] = contain_nt_list
 # 导出数据
 data.to_excel(outpath, columns=cols)

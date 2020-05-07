@@ -38,7 +38,7 @@ for i in interval:
     evaluate.append(temp_evaluate)
 
 # 写入数据
-data['回复间隔'] = interval
-data['及时性评价'] = evaluate
-data.to_excel(outpath)
+write_data = pd.DataFrame({'留言编号': data['留言编号'], '回复间隔': interval, '及时性评价': evaluate, },
+                          columns=['留言编号', '回复间隔', '及时性评价'])
+write_data.to_excel(outpath, index=None)
 print('导出', outpath)

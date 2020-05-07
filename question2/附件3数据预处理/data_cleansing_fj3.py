@@ -1,10 +1,12 @@
 # 根据用户ID分类留言
+
 import pandas as pd
 
+print('开始进行附件3数据预处理')
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '反对数', '点赞数']
 
-path = '../data/附件3.xlsx'
-outpath = '../data/附件3_清洗后.xlsx'
+path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3.xlsx'
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3_清洗后.xlsx'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
@@ -27,3 +29,5 @@ data['留言主题'] = data['留言主题'].apply(
 
 # 导出数据
 data.to_excel(outpath, columns=cols)
+print('导出数据: ', outpath)
+print('附件3数据预处理完成')

@@ -30,15 +30,15 @@ for i in range(len(reply)):
 
 # 划分标准
 def get_evaluate(temp_num):
-    if temp_num < 0.1:
+    if temp_num < 0.05:
         return 'E'
     elif temp_num < 0.2:
         return 'D'
-    elif temp_num < 0.55:
+    elif temp_num < 0.5:
         return 'C'
     elif temp_num < 0.8:
         return 'B'
-    elif temp_num < 0.9:
+    elif temp_num < 0.95:
         return 'A'
     else:
         return 'A+'
@@ -49,8 +49,7 @@ for i in similarity:
     evaluate.append(get_evaluate(i))
 
 # 写入数据
-data['相关性'] = similarity
-# data['分词后相关性'] = similarity_jieba
-data['相关性评价'] = evaluate
-data.to_excel(outpath, index=None)
+write_data = pd.DataFrame({'留言编号': data['留言编号'], '相关性指数': similarity, '相关性评价': evaluate, },
+                          columns=['留言编号', '相关性指数', '相关性评价'])
+write_data.to_excel(outpath, index=None)
 print('导出', outpath)

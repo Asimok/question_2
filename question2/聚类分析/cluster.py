@@ -9,12 +9,17 @@ from sklearn.feature_extraction.text import TfidfTransformer
 
 from question2.附件3数据预处理.date_format import get_date_interval
 
+print('开始进行聚类分析')
 # DBSCAN 参数
 temp_eps = 0.9
 temp_min_sampleses = 4
-outpath = '../data/聚类结果明细表.xls'
-outpath2 = '../answer/热点问题留言明细表.xls'
-path = '../data/去除30天内同一用户相似度0.75+的留言.xls'
+# 热度指数求解参数
+HOT_TIME = 0.7  # 数量/时间跨度 占比
+LIKE_DISLIKE = 0.3  # 点赞数、反对数 占比
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/聚类结果明细表.xls'
+outpath2 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/answer2/热点问题留言明细表.xls'
+outpath3 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/'
+path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/去除30天内同一用户相似度0.75+的留言.xls'
 message_data = pd.read_excel(path)
 all_data = pd.read_excel(path)
 predict_data = message_data['留言主题']
@@ -193,7 +198,7 @@ for i in range(len(labels_loc) - 1):
     single_like_and_dislike = get_single_like_and_dislike(labels_loc[i])
     temp_hot_like_and_dislike = single_like_and_dislike / like_and_dislike
     # 热度指数
-    temp_hot = temp_hot_time * 0.7 + temp_hot_like_and_dislike + 0.3
+    temp_hot = temp_hot_time * HOT_TIME + temp_hot_like_and_dislike * LIKE_DISLIKE
     # hot_score.append(temp_hot)
     # time_span.append(get_interval_min_max(labels_loc[i]))
     time_span_inner = get_interval_min_max(labels_loc[i])
@@ -290,7 +295,7 @@ write_table2_2 = pd.DataFrame(
     columns=['问题ID', '留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '点赞数', '反对数'])
 
 write_table2_2.to_excel(outpath2, index=None)
-print(outpath2, '导出成功!!!')
+print('导出文件: ', outpath2)
 
 # 绘图数据
 cluster_num = len(labels_loc) - 1
@@ -305,4 +310,6 @@ for i in range(cluster_num):
     sub_cluster_id.append('簇' + str(i))
 
 write_sub = pd.DataFrame({'簇ID': sub_cluster_id, '留言数量': sub_cluster_num}, columns=['簇ID', '留言数量'])
-write_sub.to_excel('../data/' + setting + '_簇数详情.xls', index=None)
+write_sub.to_excel(str(outpath3) + setting + '_簇数详情.xls', index=None)
+print('导出文件: ', outpath3)
+print('聚类分析结束')

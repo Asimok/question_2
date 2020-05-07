@@ -38,4 +38,4 @@ for i in reply:
     tail.append(temp_tail)
 write_data = pd.DataFrame({'开头': header, '结尾': tail})
 
-write_data.to_excel('../data/开头结尾.xls',index=None)
+write_data.to_excel('../data/开头结尾.xls', index=None)

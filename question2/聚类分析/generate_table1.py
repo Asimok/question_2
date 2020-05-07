@@ -3,10 +3,10 @@ import jieba.analyse
 import pandas as pd
 from textrank4zh import TextRank4Sentence
 
-in_path = '../data/聚类结果明细表.xls'
-out_path = '../data/问题描述.xls'
-out_path2 = '../data/地点人群.xls'
-out_path3 = '../answer/热点问题表.xls'
+in_path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/聚类结果明细表.xls'
+out_path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/问题描述.xls'
+out_path2 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/地点人群.xls'
+out_path3 = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/answer2/热点问题表.xls'
 df_in = pd.read_excel(in_path)
 jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/places.txt')
 jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt')
@@ -64,6 +64,7 @@ for i in range(len(loc_people)):
 df2 = pd.DataFrame({'问题ID': question_list[0:5], '地点/人群': str_loc_people, '问题描述': abb},
                    columns=['问题ID', '地点/人群', '问题描述'])
 df2.to_excel(out_path2, index=None)
+print('导出文件: ', out_path2)
 # -------------------------------生成 表1-热点问题表------------------------------
 write_tb1_abb = abb[0:5]
 write_tb1_hot_score = hot_score[0:5]
@@ -74,3 +75,4 @@ df3 = pd.DataFrame({'热度排名': [i for i in range(1, 6)], '问题ID': questi
                     '时间范围': write_tb1_time_span, '地点/人群': write_tb1_loc_people, '问题描述': write_tb1_abb},
                    columns=['热度排名', '问题ID', '热度指数', '时间范围', '地点/人群', '问题描述'])
 df3.to_excel(out_path3, index=None)
+print('导出文件: ', out_path3)

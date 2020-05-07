@@ -1,5 +1,7 @@
+# 分割  训练集 验证集 测试集
 import pandas as pd
 
+print('分割  训练集 验证集 测试集')
 classification = ['城乡建设', '环境保护', '交通运输', '教育文体', '劳动和社会保障', '商贸旅游', '卫生计生']
 data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question1/data/附件2_清洗后.xlsx')
 classification_num = list(data['一级标签'].value_counts())
@@ -29,12 +31,13 @@ def get_temp_val(data_train, data_test, data_dev):
         y_dev.append(classification.index(index))
 
 
-# 比例 8
-for i in range(7):
+# 训练集 验证集 测试集 0.15 0
+# 比例 6:2:2
+for i in range(len(classification)):
     get_temp_data = data.loc[data['一级标签'] == classification[i]]
-    temp_data = get_temp_data.sample(frac=0.15)
+    temp_data = get_temp_data.sample(frac=0.4)
     temp_train = get_temp_data.drop(temp_data.index)
-    temp_test = temp_data.sample(frac=0)
+    temp_test = temp_data.sample(frac=0.5)
     temp_dev = temp_data.drop(temp_test.index)
     get_temp_val(temp_train, temp_test, temp_dev)
 
@@ -81,3 +84,4 @@ lens = []
 for i in range(data['留言详情'].__len__()):
     lens.append(len(data['留言详情'][i]))
 shapes = pd.DataFrame(lens).describe()
+print('完成分割  训练集 验证集 测试集')

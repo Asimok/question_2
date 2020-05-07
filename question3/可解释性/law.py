@@ -4,7 +4,7 @@ import re
 
 import pandas as pd
 
-data = pd.read_excel('../data/附件4_清洗后.xlsx')
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 reply = data['答复意见']
 
 
@@ -25,4 +25,4 @@ for i in reply:
     contain_law.append(ans_str)
 data['法律法规'] = contain_law
 
-data.to_excel('../data/法律法规.xls')
+data.to_excel('./home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/法律法规.xls')

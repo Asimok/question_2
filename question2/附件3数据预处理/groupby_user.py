@@ -4,10 +4,11 @@ import pandas as pd
 from question2.附件3数据预处理.date_format import get_date_interval
 from question2.附件3数据预处理.sentence_similarity import tf_similarity
 
+print('执行  path_data_cleansing.py')
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '反对数', '点赞数']
 
-path = '../data/附件3_清洗后.xlsx'
-outpath = '../data/去除30天内同一用户相似度0.75+的留言.xls'
+path = ' /home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/附件3_清洗后.xlsx'
+outpath = ' /home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/去除30天内同一用户相似度0.75+的留言.xls'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
@@ -62,3 +63,5 @@ for temp_list in user_list:
         user_df_end = pd.concat([user_df_end, temp_list], axis=0)
 
 user_df_end.to_excel(outpath, index=None)
+print('导出数据: ', outpath)
+print('执行  path_data_cleansing.py 完成')
