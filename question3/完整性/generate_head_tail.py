@@ -1,8 +1,15 @@
-# 提取文件的标准开头结尾
+"""
+提取文件的标准开头结尾
+输入文件：
+附件4_清洗后.xlsx
+输出文件：
+开头结尾.xls
+"""
 
 import pandas as pd
 
-data = pd.read_excel('../data/附件4_清洗后.xlsx')
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/开头结尾.xls'
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 reply = data['答复意见']
 
 
@@ -38,4 +45,4 @@ for i in reply:
     tail.append(temp_tail)
 write_data = pd.DataFrame({'开头': header, '结尾': tail})
 
-write_data.to_excel('../data/开头结尾.xls', index=None)
+write_data.to_excel(outpath, index=None)

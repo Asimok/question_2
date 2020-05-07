@@ -5,6 +5,7 @@
       <w>convseg</w>
       <w>cuda</w>
       <w>dbscan</w>
+      <w>duihuakuan</w>
       <w>flagdict</w>
       <w>groupby</w>
       <w>hhhh</w>
@@ -14,6 +15,7 @@
       <w>normorlize</w>
       <w>outpath</w>
       <w>pretrained</w>
+      <w>proj</w>
       <w>sampleses</w>
       <w>scaler</w>
       <w>stopword</w>

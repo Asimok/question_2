@@ -1,4 +1,13 @@
-# 根据用户ID分类留言
+"""
+根据用户ID分类留言
+对同一用户30天内，相似度高于0.75的留言去重
+保证聚类结果的准确性
+输入文件：
+附件3_清洗后.xlsx
+输出文件：
+去除30天内同一用户相似度0.75+的留言.xls
+"""
+
 import pandas as pd
 
 from question2.附件3数据预处理.date_format import get_date_interval
@@ -57,7 +66,7 @@ for value in user_dict.values():
 for temp_list in user_list:
     if len(temp_list) > 1:
         # print('筛选')
-        remove_user_themes(temp_list, 30, 0.70)
+        remove_user_themes(temp_list, 30, 0.75)
     else:
         # user_list_end.append(temp_list)
         user_df_end = pd.concat([user_df_end, temp_list], axis=0)

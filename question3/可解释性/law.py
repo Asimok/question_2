@@ -1,5 +1,10 @@
-# 计算留言回复的完整性
-
+"""
+提取附件4 答复意见 中的法律法规、政策文件等
+输入文件：
+附件4_清洗后.xlsx
+输出文件：
+法律法规.xls
+"""
 import re
 
 import pandas as pd
@@ -25,4 +30,4 @@ for i in reply:
     contain_law.append(ans_str)
 data['法律法规'] = contain_law
 
-data.to_excel('./home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/法律法规.xls')
+data.to_excel(outpath, index=None)

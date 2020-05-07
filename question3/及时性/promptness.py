@@ -1,8 +1,15 @@
+"""
+计算留言回复的及时性
+输入文件：
+附件4_清洗后.xlsx
+输出文件：
+及时性.xls
+"""
 import pandas as pd
 
 from question2.附件3数据预处理.date_format import get_date_interval
 
-outpath = '../data/及时性.xls'
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/及时性.xls'
 
 data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 

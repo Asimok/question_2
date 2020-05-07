@@ -12,4 +12,4 @@ if __name__ == "__main__":
     os.system('python3 ' + path_data_evaluate + "完整性/integrity.py")  # 求解完整性
     os.system('python3 ' + path_data_evaluate + "相关性/correlation.py")  # 求解相关性
 
-    os.system('python3 ' + path_data_evaluate + "评价方案/correlation.py")  # 导出评价方案
+    os.system('python3 ' + path_data_evaluate + "评价方案/combine_evaluation.py")  # 导出评价方案

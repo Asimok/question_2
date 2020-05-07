@@ -1,3 +1,9 @@
+"""
+爬取安居客(https://cs.fang.anjuke.com) 长沙市所有小区名
+生成自定义jieba分词词典
+输出文件：
+changsha_area_ns.txt
+"""
 from lxml import etree
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,9 +16,6 @@ driver.get(area_url)
 html = driver.page_source
 dom = etree.HTML(html, etree.HTMLParser(encoding='utf-8'))
 data = []
-# area = dom.xpath(
-#     '//*[@id="list-content"]/div/div[1]/h3/a/@title')
-# data.append(area)
 
 wait = WebDriverWait(driver, 10)  # 等待10秒
 i = 0
@@ -36,7 +39,7 @@ while i < 100:
     confrim_btn.click()  # 翻页
     i += 1
 
-with open('../data/changsha_area_ns.txt', 'w') as f:
+with open('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt', 'w') as f:
     for i in data:
         f.write(i)
         f.write(' ')

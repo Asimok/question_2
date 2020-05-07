@@ -1,4 +1,13 @@
-# 分割  训练集 验证集 测试集
+"""
+分割  训练集 验证集 测试集
+比例 6:2:2
+输入文件：
+附件2_清洗后.xlsx
+输出文件：
+train_detail.txt
+dev_detail.txt
+test_detail.txt
+"""
 import pandas as pd
 
 print('分割  训练集 验证集 测试集')

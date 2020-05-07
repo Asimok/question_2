@@ -1,3 +1,11 @@
+"""
+提取附件2中出现的 X市、X县等信息 生成jieba用户自定义次词典
+输入文件：
+附件2.xlsx
+输出文件：
+places.txt
+"""
+
 import re
 
 import pandas as pd

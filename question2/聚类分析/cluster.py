@@ -1,3 +1,13 @@
+"""
+对预处理后的附件三留言详情进行聚类分析
+输入参数：
+DBSCAN 参数 ，热度指数求解参数
+输入文件：
+去除30天内同一用户相似度0.75+的留言.xls
+输出文件：
+聚类结果明细表.xls
+表2-热点问题留言明细表.xls
+"""
 import jieba.analyse
 import jieba.analyse
 import jieba.posseg as psg
@@ -300,7 +310,7 @@ print('导出文件: ', outpath2)
 # 绘图数据
 cluster_num = len(labels_loc) - 1
 setting = 'eps=' + str(temp_eps) + '_min_samples=' + str(temp_min_sampleses)
-with open('../data/参数_簇数关系(min_sampleses=4).txt', 'a+') as f:
+with open('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/参数_簇数关系(min_sampleses=4).txt', 'a+') as f:
     f.writelines(setting + ' ' + str(cluster_num) + '\n')
 
 sub_cluster_num = []

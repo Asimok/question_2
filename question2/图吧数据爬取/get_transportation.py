@@ -1,3 +1,9 @@
+"""
+爬取图吧(https://poi.mapbar.com)长沙市乡镇、街道、社区、小区、地铁站、公交站、道路等交通设施名
+生成自定义jieba分词词典
+输出文件：
+changsha_transportation_ns.txt
+"""
 from lxml import etree
 from selenium import webdriver
 
@@ -20,7 +26,7 @@ data_list = ['G11', 'G12', 'G14', 'G15', 'G20', 'G21', 'G30', 'G31', 'G40', 'G50
 for index in data_list:
     get_data(index)
 
-with open('../data/changsha_transportation_ns.txt', 'w') as f:
+with open('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_transportation_ns.txt', 'w') as f:
     for i in data:
         f.write(i)
         f.write(' ')

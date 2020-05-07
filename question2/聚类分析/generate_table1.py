@@ -1,3 +1,12 @@
+"""
+生成 表1-热点问题表
+输入文件：
+聚类结果明细表.xls
+输出文件：
+问题描述.xls
+地点人群.xls
+热点问题表.xls
+"""
 import hanlp
 import jieba.analyse
 import pandas as pd

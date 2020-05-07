@@ -1,15 +1,20 @@
+"""
+计算答复意见相关性
+输入文件：
+附件4_清洗后.xlsx
+输出文件：
+相关性.xls
+"""
 import pandas as pd
 
 from question2.附件3数据预处理.sentence_similarity import tf_similarity
 from question3.相关性.get_head_tail import get_head_tail
 
-outpath = '../data/相关性.xls'
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/相关性.xls'
 
 data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 message_detail = data['留言详情']
 read_reply = data['答复意见']
-# reply.apply(lambda x: str(x).replace(head, ''))
-
 
 reply = []
 # 去除标准开头结尾
@@ -53,3 +58,5 @@ write_data = pd.DataFrame({'留言编号': data['留言编号'], '相关性指�
                           columns=['留言编号', '相关性指数', '相关性评价'])
 write_data.to_excel(outpath, index=None)
 print('导出', outpath)
+
+# pd.Series(evaluate).value_counts()

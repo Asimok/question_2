@@ -1,4 +1,10 @@
-# 计算答复意见完整性
+"""
+计算答复意见完整性
+输入文件：
+附件4_清洗后.xlsx
+输出文件：
+完整性.xls
+"""
 import re
 
 import jieba
@@ -9,8 +15,8 @@ from sklearn.preprocessing import MinMaxScaler
 from question3.完整性.get_head_tail_frequently_word import get_frequency
 from question3.相关性.get_head_tail import get_head_tail
 
-outpath = '../data/完整性.xls'
-data = pd.read_excel('../data/附件4_清洗后.xlsx')
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/完整性.xls'
+data = pd.read_excel('/home/asimov/PycharmProjects/wisdom_gov_affairs/question3/data/附件4_清洗后.xlsx')
 read_reply = data['答复意见']
 data_contain_nt = data['是否包含机构']
 reply = []
@@ -29,19 +35,14 @@ def data_jieba(message_list):
     jieba.load_userdict('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/changsha_area_ns.txt')
 
     data_cut = pd.Series(message_list).apply(lambda x: jieba.lcut(x))
-    # 去除停用词 csv 默认 ,作为分隔符 用sep取一个数据里不存在的字符作为分隔符保障顺利读取
     stop_words = pd.read_csv('/home/asimov/PycharmProjects/wisdom_gov_affairs/question2/data/stopword.txt',
                              sep='hhhh',
                              encoding='GB18030', engine='python')
-    # pd转列表拼接  iloc[:,0] 取第0列
     stop_words = list(stop_words.iloc[:, 0]) + [' ', '...', '', '  ', '→', '-', '：', ' ●', '\t', '\n', '！', '？']
     data_after_stop = data_cut.apply(lambda x: [i.strip() for i in x if i not in stop_words])
 
     data_after_jieba = []
     for temp_theme in data_after_stop:
-        # keywords = " ".join(temp_theme)
-        # data_after_jieba.append(keywords)
-        # for i in temp_theme:
         data_after_jieba.append(temp_theme)
     return data_after_jieba
 

@@ -1,10 +1,18 @@
-# 根据用户ID分类留言
+"""
+对附件2进行数据预处理
+预处理内容：
+统一时间格式、日期规范化、去除无关符号
+输入文件：
+附件2.xlsx
+输出文件：
+附件2_清洗后.xlsx
+"""
 import pandas as pd
 
 cols = ['留言编号', '留言用户', '留言主题', '留言时间', '留言详情', '一级标签']
 
-path = '../data/附件2.xlsx'
-outpath = '../data/附件2_清洗后.xlsx'
+path = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question1/data/附件2.xlsx'
+outpath = '/home/asimov/PycharmProjects/wisdom_gov_affairs/question1/data/附件2_清洗后.xlsx'
 data = pd.read_excel(path)
 
 user_df_end = pd.DataFrame(columns=cols)
